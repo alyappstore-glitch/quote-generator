@@ -332,7 +332,7 @@ document.getElementById("generatePdfBtn").addEventListener("click", async () => 
     <html>
       <head>
         <meta charset="utf-8">
-        <base href="http://localhost:3000/">
+        <base href="${window.location.origin}/">
         <link rel="stylesheet" href="style.css" /> 
         <style>
             @media print { 
