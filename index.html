@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quote Generator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <title id="dynamic-title">Quote</title>
+
+  <div class="container no-print">
+    <h1>Facility Plus Quote Generator</h1>
+
+    <div class="layout">
+      <form id="quote-form">
+        <h2>Quote Details</h2>
+
+        <div class="field">
+          <label for="quoteNumber">Quote #</label>
+          <input type="text" id="quoteNumber" placeholder="e.g. 2025-001" />
+        </div>
+
+        <div class="field">
+          <label for="quoteDate">Date</label>
+          <input type="date" id="quoteDate" />
+        </div>
+
+        <h3>Client Info</h3>
+        <div class="field">
+          <label for="clientName">Client Name</label>
+          <input type="text" id="clientName" placeholder="Client Name" />
+        </div>
+
+        <div class="field">
+          <label for="clientAddress">Client Address</label>
+          <textarea id="clientAddress" rows="3" placeholder="Address"></textarea>
+        </div>
+
+        <h3>Project Info & Scope</h3>
+        
+        <div class="field">
+            <label for="customerRequest" style="color: #d35400;">Customer Request (Internal Context)</label>
+            <textarea id="customerRequest" rows="3" placeholder="Paste client's email request here..."></textarea>
+            <small style="color:#999">This helps the AI check your scope. It will NOT appear on the PDF.</small>
+        </div>
+
+        <div class="field">
+          <label for="projectTitle">Proposal Title</label>
+          <input type="text" id="projectTitle" placeholder="e.g. Painting & Repairs" />
+        </div>
+
+        <div class="field">
+          <label for="scope">Scope of Work</label>
+          <textarea id="scope" rows="5" placeholder="Each line will become a bullet point"></textarea>
+        </div>
+
+        <button type="button" id="reviewScopeBtn" class="ai-btn">✨ AI Review Scope</button>
+        
+        <div id="aiFeedback" style="display:none; background: #fdf2e9; padding: 15px; border: 1px solid #e67e22; border-radius: 4px; margin-bottom: 15px; margin-top: 10px; font-size: 0.9rem;">
+            <strong>AI Feedback:</strong>
+            <div id="aiResponseContent" style="margin-top: 5px; white-space: pre-wrap;"></div>
+        </div>
+
+        <h3>Pricing Model</h3>
+        <div class="field">
+          <label>Calculation Method</label>
+          <div class="radio-group">
+            <label>
+              <input type="radio" name="financialMode" value="manual" />
+              Manual Total
+            </label>
+            <label>
+              <input type="radio" name="financialMode" value="margin" checked />
+              Cost + Margin %
+            </label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="province">Province (Tax Rate)</label>
+          <select id="province">
+            <option value="">Select province...</option>
+            <option value="AB">Alberta</option>
+            <option value="BC">British Columbia</option>
+            <option value="MB">Manitoba</option>
+            <option value="NB">New Brunswick</option>
+            <option value="NL">Newfoundland and Labrador</option>
+            <option value="NS">Nova Scotia</option>
+            <option value="NT">Northwest Territories</option>
+            <option value="NU">Nunavut</option>
+            <option value="ON">Ontario</option>
+            <option value="PE">Prince Edward Island</option>
+            <option value="QC">Quebec</option>
+            <option value="SK">Saskatchewan</option>
+            <option value="YT">Yukon</option>
+          </select>
+        </div>
+
+        <div id="margin-inputs">
+            <div class="field" style="background: #eef6fc; padding: 10px; border-radius: 4px; border: 1px solid #cde0f2;">
+                <label for="profitMargin" style="color:#1b4b9c;">Target Profit Margin (%)</label>
+                <input type="number" id="profitMargin" value="20" placeholder="20" />
+                <small style="color:#666; display:block; margin-top:4px;">Formula: Cost / (1 - Margin%)</small>
+            </div>
+
+            <h4 style="margin: 15px 0 5px; color:#555;">Internal Costs (Your Expense)</h4>
+            <div class="field-inline">
+                <div class="field">
+                <label for="costIncurred">Incurred</label>
+                <input type="number" id="costIncurred" placeholder="0.00" step="0.01" class="cost-input" />
+                </div>
+                <div class="field">
+                <label for="costLabour">Labour</label>
+                <input type="number" id="costLabour" placeholder="0.00" step="0.01" class="cost-input" />
+                </div>
+            </div>
+            <div class="field-inline">
+                <div class="field">
+                <label for="costMaterials">Materials</label>
+                <input type="number" id="costMaterials" placeholder="0.00" step="0.01" class="cost-input" />
+                </div>
+                <div class="field">
+                <label for="costTravel">Travel</label>
+                <input type="number" id="costTravel" placeholder="0.00" step="0.01" class="cost-input" />
+                </div>
+            </div>
+        </div>
+
+        <div id="manual-inputs" style="display:none;">
+            <div class="field">
+                <label for="manualSubtotal">Subtotal (Billing Amount)</label>
+                <input type="number" id="manualSubtotal" placeholder="0.00" step="0.01" />
+            </div>
+        </div>
+
+        <div class="field-inline" style="margin-top: 15px; border-top: 2px solid #eee; padding-top: 15px;">
+          <div class="field">
+            <label>Client Subtotal</label>
+            <input type="text" id="displaySubtotal" readonly style="background: #f9f9f9; font-weight:bold;" />
+          </div>
+          <div class="field">
+            <label>Tax</label>
+            <input type="text" id="displayTax" readonly style="background: #f9f9f9;" />
+          </div>
+          <div class="field">
+            <label>Total</label>
+            <input type="text" id="displayTotal" readonly style="background: #f9f9f9; font-weight:bold; color:#1b4b9c;" />
+          </div>
+        </div>
+
+        <div class="field" style="margin-top: 10px;">
+            <label>PDF Display Option</label>
+            <div class="radio-group">
+                <label><input type="radio" name="pdfStyle" value="detailed" checked> Show Breakdown</label>
+                <label><input type="radio" name="pdfStyle" value="simple"> Show Total Only</label>
+            </div>
+        </div>
+
+        <div id="overflowWarning" class="warning-box" style="display:none;">
+          <strong>Content will flow onto another page.</strong>
+          <div>Please check print preview to ensure formatting stays acceptable.</div>
+        </div>
+
+        <div class="field">
+          <label for="terms">Terms &amp; Notes</label>
+          <textarea id="terms" rows="4" placeholder="Each line will become a bullet point"></textarea>
+        </div>
+
+        <h3>Prepared By</h3>
+        <div class="field">
+          <label for="signerName">Name</label>
+          <input type="text" id="signerName" placeholder="Your name" />
+        </div>
+        <div class="field">
+          <label for="signerTitle">Title</label>
+          <input type="text" id="signerTitle" placeholder="Your title" />
+        </div>
+        <div class="field">
+          <label for="signatureUpload">Signature (PNG/JPG)</label>
+          <input type="file" id="signatureUpload" accept="image/png,image/jpeg" />
+          <small style="color:#666; display:block; margin-top:4px;">Tip: upload a transparent PNG for best results.</small>
+        </div>
+
+        <button type="button" id="generatePdfBtn">Generate PDF</button>
+      </form>
+
+      <div class="preview-container">
+          <div id="quote-preview">
+            <img src="header.png" alt="Header" class="header-image" />
+            <img src="side.png" alt="Side strip" class="side-image" />
+
+            <div class="quote-body">
+              <section class="client-section">
+                <div class="client-row">
+                  <div class="client-info">
+                    <p><strong>Client Name:</strong> <span data-field="clientName"></span><br>
+                       <strong>Address:</strong> <span data-field="clientAddress"></span></p>
+                  </div>
+                  <div class="quote-meta">
+                    <p><strong>Quote #:</strong> <span data-field="quoteNumber"></span><br>
+                       <strong>Date:</strong> <span data-field="quoteDate"></span></p>
+                  </div>
+                </div>
+              </section>
+
+              <section class="project-section">
+                <p><strong>Proposal:</strong> <span data-field="projectTitle"></span></p>
+              </section>
+
+              <section class="scope-section">
+                <h3>Scope of Work</h3>
+                <div class="scope-lines" data-field="scope"></div>
+              </section>
+
+              <section class="financial-section">
+                <table>
+                  <tbody id="financial-tbody"></tbody>
+                  <tfoot id="financial-tfoot">
+                    <tr class="subtotal-row">
+                        <td class="label">Subtotal</td>
+                        <td class="value">$<span data-field="subtotal">0.00</span></td>
+                    </tr>
+                    <tr>
+                        <td class="label">Tax</td>
+                        <td class="value">$<span data-field="tax">0.00</span></td>
+                    </tr>
+                    <tr class="total-row">
+                        <td class="label"><strong>Total</strong></td>
+                        <td class="value"><strong>$<span data-field="total">0.00</span></strong></td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </section>
+
+              <section class="terms-section">
+                <h3>Terms &amp; Notes</h3>
+                <div class="terms-lines" data-field="terms"></div>
+              </section>
+
+              <footer class="quote-footer">
+                <p>Thank you for the opportunity to be of service!</p>
+              </footer>
+              
+              <section class="signature-section">
+                <div class="signature-row">
+                  <div class="signature-block">
+                    <h3>Prepared By</h3>
+                    <div class="signature-image-wrapper">
+                      <img id="signatureImage" alt="Uploaded signature preview" />
+                    </div>
+                    <div class="signature-name" data-field="signerName"></div>
+                    <div class="signature-title" data-field="signerTitle"></div>
+                  </div>
+                  <div class="signature-block">
+                    <h3>Client Approval</h3>
+                    <div class="signature-line"></div>
+                    <div class="signature-label">Signature</div>
+                    <div class="signature-line"></div>
+                    <div class="signature-label">Date</div>
+                  </div>
+                </div>
+              </section>
+              
+              <div class="footer-spacer"></div>
+            </div>
+            <img src="bottom.png" alt="Footer" class="bottom-image" />
+          </div>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

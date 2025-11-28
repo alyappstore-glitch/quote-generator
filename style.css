@@ -1,0 +1,283 @@
+/* --- GLOBAL / SCREEN STYLES --- */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  background: #f3f3f5;
+  color: #333;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+h1 { margin-bottom: 20px; color: #1b4b9c; }
+
+.layout {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+/* FORM STYLING (Screen Only) */
+form#quote-form {
+  flex: 0 0 350px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+form h2, form h3 { margin-top: 0; color: #1b4b9c; border-bottom: 2px solid #f0f0f0; padding-bottom: 8px; margin-bottom: 15px; }
+form h3 { font-size: 1rem; margin-top: 20px; border-bottom: 1px solid #f0f0f0; }
+
+.field { margin-bottom: 12px; }
+.field label { display: block; font-size: 0.85rem; margin-bottom: 4px; font-weight: 600; color: #555; }
+.field input, .field textarea, .field select {
+  width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ddd; font-family: inherit; box-sizing: border-box;
+}
+.field input:focus { border-color: #1b4b9c; outline: none; }
+
+.field-inline { display: flex; gap: 10px; }
+
+/* --- FIXED ALIGNMENT FOR RADIO BUTTONS --- */
+.radio-group {
+    display: flex;
+    flex-direction: column; /* Stack the options vertically */
+    gap: 8px;
+    margin-top: 5px;
+}
+
+.radio-group label {
+    display: flex;
+    align-items: center; /* Vertically align text and dot */
+    gap: 8px;
+    cursor: pointer;
+    font-weight: normal;
+}
+
+/* Force radio buttons to be normal size, overriding the global width:100% */
+.radio-group input[type="radio"] {
+    width: auto;
+    margin: 0;
+}
+
+/* AI BUTTON STYLES */
+.ai-btn {
+    width: 100%;
+    padding: 10px;
+    background: #8e44ad;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-bottom: 10px;
+}
+.ai-btn:hover { background: #732d91; }
+.ai-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+#generatePdfBtn {
+  margin-top: 20px; width: 100%; padding: 12px; background: #1b4b9c; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 1rem; transition: background 0.2s;
+}
+#generatePdfBtn:hover { background: #143a7a; }
+
+#breakdown-fields { display: none; background: #f9f9f9; padding: 10px; border-radius: 4px; margin-bottom: 10px; }
+.warning-box {
+  background: #fdecea;
+  border: 1px solid #f5c2c7;
+  color: #8a1c1c;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+/* PREVIEW AREA (Screen) */
+.preview-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    background: #525659;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+#quote-preview {
+  background: #ffffff;
+  position: relative;
+  width: 210mm;
+  height: 297mm;
+  max-height: 297mm;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  overflow-y: auto;
+}
+
+/* --- QUOTE CONTENT STYLES --- */
+  .header-image { width: 80%; display: block; }
+  .side-image { 
+    position: absolute; 
+    top: 0; right: 0; 
+    width: 140px; 
+    height: 110%; 
+    object-fit: cover; 
+    object-position: right; 
+    z-index: 10; 
+  }
+.bottom-image { position: absolute; left: 0; bottom: 0; width: 100%; height: auto; z-index: 10; }
+
+.quote-body {
+  padding: 20px 170px 40px 40px; 
+  position: relative;
+  z-index: 20;
+}
+
+.client-section { margin-bottom: 25px; }
+.client-row { display: flex; justify-content: space-between; }
+.client-info p, .quote-meta p { line-height: 1.5; margin: 0; }
+.quote-meta { text-align: right; }
+
+.project-section { background: #f0f4fc; padding: 10px; border-left: 4px solid #1b4b9c; margin-bottom: 20px; }
+.project-section p { margin: 0; }
+
+h3 { color: #1b4b9c; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 10px; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 0.5px; }
+
+.scope-line, .term-line { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 6px; line-height: 1.4; }
+.bullet-icon { width: 10px; height: 10px; margin-top: 3px; flex-shrink: 0; }
+
+.financial-section { margin: 30px 0; page-break-inside: avoid; }
+.financial-section table { width: 100%; border-collapse: collapse; }
+.financial-section td { padding: 6px 8px; border-bottom: 1px solid #eee; }
+.financial-section .label { text-align: left; width: 70%; }
+.financial-section .value { text-align: right; font-family: 'Courier New', monospace; font-weight: 600; }
+.subtotal-row td { border-top: 2px solid #333; }
+.total-row td { border-top: 2px solid #333; font-size: 1.1rem; color: #1b4b9c; background: #f9f9f9; }
+
+.terms-section { margin-bottom: 40px; page-break-inside: avoid; }
+
+.footer-spacer { height: 40px; } 
+.quote-footer { text-align: center; font-weight: bold; font-size: 0.9rem; color: #555; margin: 12px 0 10px 0; }
+
+.signature-section { margin-top: 10px; margin-bottom: 10px; }
+.signature-row { display: flex; gap: 30px; align-items: flex-start; }
+.signature-block { flex: 1; }
+.signature-image-wrapper {
+  min-height: 70px;
+  border-bottom: 1px solid #ccc;
+  padding: 0 0 6px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+}
+#signatureImage {
+  max-height: 60px;
+  max-width: 100%;
+  object-fit: contain;
+  display: block;
+}
+.signature-name { font-weight: 700; color: #333; }
+.signature-title { color: #555; font-size: 0.9rem; }
+.signature-line {
+  border-bottom: 1px solid #ccc;
+  height: 28px;
+  margin: 6px 0 4px;
+}
+.signature-label { font-size: 0.85rem; color: #555; }
+
+.signature-section, .terms-section, .scope-section, .financial-section {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+@media print {
+  .terms-section, .financial-section, .signature-section, .scope-section {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    page-break-before: auto;
+  }
+  .quote-body {
+    page-break-after: auto;
+  }
+}
+
+/* --- PRINT / PDF GENERATION STYLES --- */
+@media print {
+  @page { size: A4; margin: 0; }
+  body { background: white; }
+  
+  .container.no-print, h1, form, #generatePdfBtn, .preview-container { 
+      width: 100%; margin: 0; padding: 0; background: white;
+  }
+  .container > h1, .layout form { display: none !important; }
+  
+  .preview-container { display: block; padding: 0; background: white; }
+  #quote-preview {
+    width: 210mm;
+    min-height: 297mm;
+    height: auto;
+    max-height: none;
+    box-shadow: none; border: none; margin: 0;
+    position: relative; top: 0; left: 0;
+    overflow: visible;
+  }
+  /* style.css (Inside @media print) REPLACE THESE BLOCKS: */
+
+/* 1. HEADER: Starts left, ends at sidebar (100% width - 140px sidebar) */
+.header-image {
+    position: absolute; /* Use 'absolute' for Page 1 only, 'fixed' for every page */
+    top: 0;
+    left: 0;
+    /* This calculates the width so it stops exactly at the sidebar */
+    width: calc(100% - 140px); 
+    height: auto;
+    page-break-after: avoid;
+    z-index: 5;
+}
+
+.side-image {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 140px; 
+    height: 100%;
+    object-fit: cover;
+    
+    /* ADD THIS LINE: Anchors image to the top-right corner so it never chops */
+    object-position: top right; 
+    
+    z-index: 10;
+}
+
+/* 3. FOOTER: Starts left, ends at sidebar */
+.bottom-image {
+    position: fixed; /* Fixed keeps it at the bottom of EVERY page */
+    left: 0;
+    bottom: 0;
+    /* Same calculation as header to prevent overlap */
+    width: calc(100% - 140px); 
+    height: auto;
+    page-break-before: avoid;
+    z-index: 5;
+}
+  .quote-body { padding: 200px 170px 220px 40px; }
+  
+  /* HIDE AI ELEMENTS & INTERNAL FIELDS ON PRINT */
+  #reviewScopeBtn, #aiFeedback, label[for="customerRequest"], #customerRequest, .field:has(#customerRequest) {
+      display: none !important;
+  }
+  #overflowWarning { display: none !important; }
+
+  .client-section, .project-section, .financial-section, .terms-section {
+    page-break-inside: avoid;
+  }
+}
